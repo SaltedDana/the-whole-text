@@ -70,7 +70,7 @@ $("fetchBtn").addEventListener("click", async () => {
     const { text } = await post("/api/fetch", { url });
     $("text").value = text;
     updateCount();
-    setStatus("Text loaded. Check it, then press Show structure.");
+    setStatus("Text loaded. Check it, then press Show me the structure.");
   } catch (e) {
     setStatus(e.message, true);
   } finally {

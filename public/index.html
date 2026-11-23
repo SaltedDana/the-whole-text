@@ -25,7 +25,22 @@
 
 <main id="inputScreen" class="input-screen">
   <h1 class="display">Reading access for everyone.</h1>
-  <p class="lede">Dyslexia, an attention disorder or plain distraction is no longer a barrier to a long text. Paste an article and get every original word in a shape you can stay with: options side by side, steps numbered, conclusions made big.</p>
+  <p class="lede">Dyslexia, an attention disorder or plain distraction is no longer a barrier to a long text. You read every word the writer wrote, in a shape you can stay with.</p>
+
+  <section class="pitch" aria-label="How it works, shown in the app's own layout">
+    <div class="blk pair weighted">
+      <div class="side a"><div class="blk-label">Side A</div><div class="tx">A summary is shorter,</div></div>
+      <div class="mid"><div class="pill"><span class="sym">⇄</span>but</div></div>
+      <div class="side b"><div class="blk-label">Side B</div><div class="tx">you still have to know the whole contract, the whole paper, the whole report.</div></div>
+    </div>
+    <ol class="steps">
+      <li class="step"><div class="n">1</div><div class="tx"><span class="cw g-sequence"><span class="sym">1 2 3</span>First</span>, you paste your text or a link to an article.</div></li>
+      <li class="step"><div class="n">2</div><div class="tx"><span class="cw g-sequence"><span class="sym">1 2 3</span>Second</span>, you get a map: how long the text is and what is inside it.</div></li>
+      <li class="step"><div class="n">3</div><div class="tx"><span class="cw g-sequence"><span class="sym">1 2 3</span>Finally</span>, you read. Options sit side by side, steps get numbers, conclusions get big.</div></li>
+    </ol>
+    <div class="blk summary-blk"><div class="blk-label">Σ  Summary</div><div class="tx"><span class="cw g-summary"><span class="sym">Σ</span>In short</span>, nothing is cut and nothing is rewritten. You get the whole text, and you get through it.</div></div>
+    <p class="pitch-note">This section uses the same layout the app gives your text.</p>
+  </section>
 
   <label class="field-label" for="url">Link to an article</label>
   <div class="url-row">
@@ -37,8 +52,8 @@
   <textarea id="text" rows="12" placeholder="Paste an English text here."></textarea>
 
   <div class="actions">
-    <button type="button" class="btn primary" id="go">Show structure</button>
-    <button type="button" class="btn ghost" id="sample">Load a sample text</button>
+    <button type="button" class="btn primary" id="go">Show me the structure</button>
+    <button type="button" class="btn ghost" id="sample">Try a sample text</button>
     <span class="count" id="count"></span>
   </div>
   <p class="status" id="status" role="status" aria-live="polite"></p>
