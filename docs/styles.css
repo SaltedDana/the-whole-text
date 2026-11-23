@@ -146,3 +146,6 @@ details.example .tx{padding:0 var(--s4) var(--s4);color:var(--ink-soft)}
 .pitch-note{margin:0;font-size:.9rem;opacity:.65}
 
 .stat .num,.step .n{font-weight:600;letter-spacing:0}
+
+.gh{margin-left:auto;font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);text-underline-offset:4px}
+.gh:hover{background:var(--ink);color:var(--paper)}
