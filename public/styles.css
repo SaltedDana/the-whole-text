@@ -149,3 +149,7 @@ details.example .tx{padding:0 var(--s4) var(--s4);color:var(--ink-soft)}
 
 .gh{margin-left:auto;font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);text-underline-offset:4px}
 .gh:hover{background:var(--ink);color:var(--paper)}
+.actions{flex-direction:column;align-items:center;gap:var(--s3)}
+.btn.big{width:100%;max-width:520px;padding:20px 28px;font-size:20px}
+.btn.small{padding:6px 12px;font-size:14px;border-width:1px;text-transform:none;letter-spacing:0}
+.pitch{margin-top:56px}

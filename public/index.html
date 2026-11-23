@@ -28,6 +28,21 @@
   <h1 class="display">Reading access for everyone.</h1>
   <p class="lede">Dyslexia, an attention disorder or plain distraction is no longer a barrier to a long text. You read every word the writer wrote, in a shape you can stay with.</p>
 
+  <label class="field-label" for="url">Link to an article</label>
+  <div class="url-row">
+    <input id="url" type="url" placeholder="https://..." autocomplete="off">
+    <button type="button" class="btn ghost" id="fetchBtn">Get text</button>
+  </div>
+
+  <label class="field-label" for="text">Or paste the text</label>
+  <textarea id="text" rows="12" placeholder="Paste an English text here."></textarea>
+
+  <div class="actions">
+    <button type="button" class="btn primary big" id="go">Show me the structure</button>
+    <button type="button" class="btn ghost small" id="sample">Try a sample text</button>
+    <span class="count" id="count"></span>
+  </div>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
   <section class="pitch" aria-label="How it works, shown in the app's own layout">
     <div class="blk pair weighted">
       <div class="side a"><div class="blk-label">Side A</div><div class="tx">A summary is shorter,</div></div>
@@ -43,21 +58,6 @@
     <p class="pitch-note">This section uses the same layout the app gives your text.</p>
   </section>
 
-  <label class="field-label" for="url">Link to an article</label>
-  <div class="url-row">
-    <input id="url" type="url" placeholder="https://..." autocomplete="off">
-    <button type="button" class="btn ghost" id="fetchBtn">Get text</button>
-  </div>
-
-  <label class="field-label" for="text">Or paste the text</label>
-  <textarea id="text" rows="12" placeholder="Paste an English text here."></textarea>
-
-  <div class="actions">
-    <button type="button" class="btn primary" id="go">Show me the structure</button>
-    <button type="button" class="btn ghost" id="sample">Try a sample text</button>
-    <span class="count" id="count"></span>
-  </div>
-  <p class="status" id="status" role="status" aria-live="polite"></p>
 </main>
 
 <div id="readScreen" class="read-screen" hidden>
