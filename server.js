@@ -59,7 +59,7 @@ The input is a list of numbered sentences: "[12] sentence text". Blank lines sep
 
 For each connecting word worth showing, return one annotation:
 - sentence: the number of the sentence that contains the connector.
-- connector: the connector exactly as written in that sentence, same letters and case (e.g. "However", "for example", "or").
+- connector: the connector exactly as written in that sentence, same letters and case (e.g. "However", "for example", "or"). It must be an actual connecting word or fixed connecting phrase, one to five words long: but, however, or, because, so, therefore, if, first, for example, in other words, in fact, in conclusion, and the like. Never return a content phrase or a clause ("it stores your verdicts", "was never taste"). When a relation is only implied by punctuation such as a dash or a colon, or by sentence order, with no connecting word, return nothing for it.
 - occurrence: which occurrence of that exact string inside the sentence, counting from 1.
 - group: one of addition, contrast, concession, cause, result, alternative, condition, sequence, example, restatement, emphasis, similarity, summary, purpose, topic, attribution, certainty. Choose by the job the word does in THIS sentence. Words such as since, as, while, so, like, still, yet, once, for can do two jobs; read the whole sentence and decide.
 - layout: how the app shows it.
@@ -150,7 +150,7 @@ function verify(annotations, paragraphs) {
   let dropped = 0;
   for (const a of annotations) {
     const hit = byId.get(a.sentence);
-    if (!hit || !a.connector.trim()) { dropped++; continue; }
+    if (!hit || !a.connector.trim() || wordCount(a.connector) > 5) { dropped++; continue; }
     const text = hit.s.text;
     let pos = -1;
     let from = 0;
@@ -229,7 +229,10 @@ async function fetchArticle(url) {
   const article = new Readability(dom.window.document).parse();
   if (!article || !article.content) throw new Error("Could not find an article on that page. Paste the text instead.");
   const body = new JSDOM(article.content).window.document;
-  const blocks = [...body.querySelectorAll("p, li, blockquote, h2, h3")]
+  const BLOCKS = "p, li, blockquote, h2, h3";
+  // Take only the innermost blocks, so a <p> inside an <li> is not read twice.
+  const blocks = [...body.querySelectorAll(BLOCKS)]
+    .filter((el) => !el.querySelector(BLOCKS))
     .map((el) => el.textContent.replace(/\s+/g, " ").trim())
     .filter((t) => t.length > 0);
   const text = blocks.length ? blocks.join("\n\n") : (article.textContent || "").trim();

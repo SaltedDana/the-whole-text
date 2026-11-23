@@ -103,10 +103,15 @@ $("newText").addEventListener("click", () => {
 });
 $("viewStructured").addEventListener("click", () => setView("structured"));
 $("viewOriginal").addEventListener("click", () => setView("original"));
+$("viewBrief").addEventListener("click", () => setView("brief"));
+
+// Brief view keeps only the sentences that carry the structure of the text.
+const BRIEF_GROUPS = new Set(["contrast", "concession", "result", "summary", "emphasis", "sequence", "alternative"]);
 
 function setView(v) {
   view = v;
   $("viewStructured").classList.toggle("on", v === "structured");
+  $("viewBrief").classList.toggle("on", v === "brief");
   $("viewOriginal").classList.toggle("on", v === "original");
   renderBody();
 }
@@ -117,6 +122,7 @@ function show() {
   $("topActions").hidden = false;
   $("viewStructured").classList.add("on");
   $("viewOriginal").classList.remove("on");
+  $("viewBrief").classList.remove("on");
   renderCover();
   renderBody();
   renderLegend();
@@ -168,7 +174,7 @@ function renderCover() {
     b.type = "button";
     b.append(el("span", "sw t-" + part.type), el("span", "no", String(i + 1)), el("span", "ty", PART_NAMES[part.type]), el("span", "lb", part.label), el("span", "wc", `${counts[i]} words`));
     b.addEventListener("click", () => {
-      if (view !== "structured") setView("structured");
+      if (view === "original") setView("structured");
       document.getElementById("part-" + (i + 1))?.scrollIntoView();
     });
     li.append(b);
@@ -246,6 +252,7 @@ function renderParagraph(p, container) {
     const block = claimed.get(id);
     if (!block) {
       steps = null;
+      if (view === "brief" && !marks.some((m) => m.sentence === id && BRIEF_GROUPS.has(m.group))) { run = null; continue; }
       if (!run) { run = el("p", "run"); container.append(run); }
       appendSentences(run, [byId.get(id)], marks);
       continue;
@@ -272,6 +279,7 @@ function renderParagraph(p, container) {
 
     if (a.layout === "pair") container.append(renderPair(block, byId, marks));
     else if (a.layout === "example") {
+      if (view === "brief") continue;
       const d = el("details", "example");
       d.open = true;
       d.append(el("summary", null, "( )  Example"));
@@ -338,6 +346,7 @@ function renderBody() {
     return;
   }
   stepNo = 0;
+  if (view === "brief") body.append(el("p", "brief-note", "Brief: only the sentences that carry the structure, such as the main turns, the steps and the conclusions. Original words, nothing rewritten. Examples and details are in the Structured view."));
   const parts = data.overview.parts;
   let next = 0;
   for (const p of data.paragraphs) {
