@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connecting Words Reader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="./">Connecting Words Reader</a>
+  <div class="top-actions" id="topActions" hidden>
+    <div class="toggle" role="group" aria-label="View">
+      <button type="button" id="viewStructured" class="on">Structured</button>
+      <button type="button" id="viewOriginal">Original</button>
+    </div>
+    <button type="button" class="btn ghost" id="newText">New text</button>
+  </div>
+</header>
+
+<main id="inputScreen" class="input-screen">
+  <h1 class="display">Read the whole text. See its structure.</h1>
+  <p class="lede">Paste a long article. Every original word stays. The connecting words decide the layout: options sit side by side, steps get numbers, conclusions get bigger.</p>
+
+  <label class="field-label" for="url">Link to an article</label>
+  <div class="url-row">
+    <input id="url" type="url" placeholder="https://..." autocomplete="off">
+    <button type="button" class="btn ghost" id="fetchBtn">Get text</button>
+  </div>
+
+  <label class="field-label" for="text">Or paste the text</label>
+  <textarea id="text" rows="12" placeholder="Paste an English text here."></textarea>
+
+  <div class="actions">
+    <button type="button" class="btn primary" id="go">Show structure</button>
+    <button type="button" class="btn ghost" id="sample">Load a sample text</button>
+    <span class="count" id="count"></span>
+  </div>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+</main>
+
+<div id="readScreen" class="read-screen" hidden>
+  <article class="reader">
+    <section class="cover" id="cover"></section>
+    <div id="body"></div>
+  </article>
+  <aside class="legend" id="legend"></aside>
+</div>
+
+<script src="sample.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
