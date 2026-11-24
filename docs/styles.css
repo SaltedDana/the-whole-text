@@ -81,14 +81,13 @@ textarea{resize:vertical;line-height:1.5}
 
 /* Inline connecting word: the word stays in body ink; color sits on the underline and the badge. */
 :root{
-  --c-turn:#373691;--g-turn:#fff; --c-reasoning:#007DA9;--g-reasoning:#fff; --c-addition:#948A7E;--g-addition:#1F2328; --c-sequence:#317031;--g-sequence:#fff;
-  --c-example:#B44286;--g-example:#fff; --c-guide:#B75F14;--g-guide:#fff; --c-summary:#971D1A;--g-summary:#fff; --c-voice:#5C412F;--g-voice:#fff;
+  /* Palette colors first: blue, slate, dark green, lavender, orange. Added to fit the palette: deep sage, coral, deep lavender. */
+  --c-turn:#3392FF;--g-turn:#1F2328; --c-reasoning:#7BA3AD;--g-reasoning:#1F2328; --c-addition:#6C8F8A;--g-addition:#1F2328; --c-sequence:#CDACFE;--g-sequence:#1F2328;
+  --c-example:#FC7142;--g-example:#1F2328; --c-guide:#A7BDAF;--g-guide:#1F2328; --c-summary:#C94F27;--g-summary:#FFFFFF; --c-voice:#9B7BD6;--g-voice:#1F2328;
 }
 @media (prefers-color-scheme: dark){
   :root{
     --ink:#E8ECEF;--ink-soft:#A9B0B6;--cream:#1E2228;--paper:#15181C;--white:#1E2228;
-    --c-turn:#A99BEC;--g-turn:#15181C; --c-reasoning:#6AC1E2;--g-reasoning:#15181C; --c-addition:#E7E2DB;--g-addition:#15181C; --c-sequence:#8ACB84;--g-sequence:#15181C;
-    --c-example:#F499D3;--g-example:#15181C; --c-guide:#FBA95F;--g-guide:#15181C; --c-summary:#E47665;--g-summary:#15181C; --c-voice:#B19684;--g-voice:#15181C;
   }
   .btn.primary{background:var(--ink);color:var(--paper)}
   .status.error{color:#FF9B7A}
