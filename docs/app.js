@@ -136,7 +136,7 @@ function renderCover() {
     s.append(el("div", "num", num.toLocaleString()), el("div", "cap", cap));
     return s;
   };
-  stats.append(stat(data.stats.words, "words ahead"), stat(data.overview.parts.length, "parts"), stat(data.annotations.length, "connecting words marked"));
+  stats.append(stat(data.stats.words, "words ahead"), stat(data.overview.parts.length, "parts"), stat(data.paragraphs.length, "paragraphs"));
   c.append(stats);
 
   c.append(el("p", "gist", data.overview.gist));
@@ -165,7 +165,7 @@ function renderCover() {
     list.append(li);
   });
   c.append(list);
-  c.append(el("p", "note", "This map was written by an AI model. The text below is the original, word for word."));
+  c.append(el("p", "note", "Green labels and this green-edged box are added by the reader. Everything else is the original text, word for word."));
 }
 
 // ---------- Body ----------
