@@ -1,0 +1,20 @@
+[
+ {
+  "id": "sample-text",
+  "title": "How a design studio worked without an office",
+  "kind": "Essay",
+  "words": 405
+ },
+ {
+  "id": "oped-four-day-week",
+  "title": "Op-ed: the four-day week",
+  "kind": "Opinion",
+  "words": 599
+ },
+ {
+  "id": "howto-home-backup",
+  "title": "How to back up your home computer",
+  "kind": "How-to",
+  "words": 623
+ }
+]

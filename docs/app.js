@@ -1,25 +1,19 @@
 // Connecting Words Reader. Renders the ORIGINAL text from the server's sentence list
 // plus verified annotations. Text is always inserted with textContent, never as HTML.
+// 8 reader-facing types, one fixed color each (spec: research/product-logic.md section 3).
 
-const GROUPS = {
+const TYPES = {
+  turn: { sym: "⇄", name: "Turn", says: "The text turns, admits a point, or offers an alternative" },
+  reasoning: { sym: "∴", name: "Reasoning", says: "Why, on what condition, or what follows" },
   addition: { sym: "+", name: "Addition", says: "One more point, same direction" },
-  contrast: { sym: "⇄", name: "Contrast", says: "The text turns around, or two sides face each other" },
-  concession: { sym: "↷", name: "Concession", says: "The writer admits an opposing point, then returns to their claim" },
-  cause: { sym: "∵", name: "Cause", says: "Why did it happen?" },
-  result: { sym: "∴", name: "Result and conclusion", says: "So what follows from this?" },
-  alternative: { sym: "?", name: "Option versus option", says: "Two things are presented as alternatives" },
-  condition: { sym: "⇒", name: "Condition", says: "True only if something else happens" },
-  sequence: { sym: "1 2 3", name: "Order and time", says: "What comes after what?" },
+  sequence: { sym: "№", name: "Sequence", says: "What comes first, next, last" },
   example: { sym: "( )", name: "Example", says: "Here is a specific case" },
-  restatement: { sym: "=", name: "Restatement", says: "The same idea in other words" },
-  emphasis: { sym: "★", name: "Emphasis", says: "This is the main thing" },
-  similarity: { sym: "≈", name: "Similarity", says: "What is true there is true here too" },
+  guide: { sym: "§", name: "Guide", says: "Same idea in other words, or the topic moves" },
   summary: { sym: "Σ", name: "Summary", says: "The bottom line" },
-  purpose: { sym: "◎", name: "Purpose", says: "What is this done for?" },
-  topic: { sym: "§", name: "Topic shift", says: "The writer moves to something else" },
-  attribution: { sym: "“ ”", name: "Who is speaking", says: "The writer's voice or a quoted voice?" },
-  certainty: { sym: "%", name: "Degree of certainty", says: "How sure is the writer?" },
+  voice: { sym: "“ ”", name: "Voice", says: "Whose voice, and how sure" },
 };
+const TYPE_ORDER = Object.keys(TYPES);
+const UNDERLINE = { turn: "solid", reasoning: "dashed", addition: "wavy", sequence: "solid", example: "wavy", guide: "dotted", summary: "double", voice: "dotted" };
 const PART_NAMES = {
   story: "Story", example: "Example", main_point: "Main point", explanation: "Explanation",
   evidence: "Evidence", background: "Background", counterpoint: "Counterpoint", summary: "Summary",
@@ -36,66 +30,46 @@ const words = (t) => (t.trim().match(/\S+/g) || []).length;
 
 let data = null;
 let view = "structured";
+let showAll = false;
+let linkLetters = new Map();
 
 function setStatus(msg, isError) {
   $("status").textContent = msg || "";
   $("status").classList.toggle("error", !!isError);
 }
 
-async function post(url, body) {
-  // Public preview: no server here. It shows a saved result for the sample text.
-  if (url === "/api/analyze" && String(body.text || "").trim() === window.SAMPLE_TEXT.trim()) {
-    const res = await fetch("demo-result.json");
-    return res.json();
-  }
-  throw new Error('This public preview shows the sample text only. Click "Load a sample text", then "Show structure". The live app runs locally with an API key.');
-}
-
-function updateCount() {
-  const n = words($("text").value);
-  $("count").textContent = n ? `${n.toLocaleString()} words` : "";
-}
-
-$("text").addEventListener("input", updateCount);
-$("sample").addEventListener("click", () => {
-  $("text").value = window.SAMPLE_TEXT;
-  updateCount();
-  setStatus("");
-});
-
-$("fetchBtn").addEventListener("click", async () => {
-  const url = $("url").value.trim();
-  if (!url) return setStatus("Add a link first.", true);
-  $("fetchBtn").disabled = true;
-  setStatus("Getting the article...");
+async function loadDemo(id) {
+  setStatus("Loading...");
   try {
-    const { text } = await post("/api/fetch", { url });
-    $("text").value = text;
-    updateCount();
-    setStatus("Text loaded. Check it, then press Show me the structure.");
-  } catch (e) {
-    setStatus(e.message, true);
-  } finally {
-    $("fetchBtn").disabled = false;
-  }
-});
-
-$("go").addEventListener("click", async () => {
-  const text = $("text").value.trim();
-  if (words(text) < 30) return setStatus("Paste a longer text first (at least 30 words).", true);
-  $("go").disabled = true;
-  setStatus("Reading the structure. This takes up to a minute for a long text...");
-  try {
-    data = await post("/api/analyze", { text });
+    const res = await fetch("data/" + id + ".json");
+    if (!res.ok) throw new Error("Could not load this example.");
+    data = await res.json();
     view = "structured";
     show();
     setStatus("");
   } catch (e) {
     setStatus(e.message, true);
-  } finally {
-    $("go").disabled = false;
   }
-});
+}
+
+async function buildPicker() {
+  const list = $("examples");
+  try {
+    const items = await (await fetch("data/index.json")).json();
+    for (const it of items) {
+      const b = el("button", "example-card");
+      b.type = "button";
+      b.append(el("span", "ex-kind", it.kind), el("span", "ex-title", it.title), el("span", "ex-words", it.words + " words"));
+      b.addEventListener("click", () => loadDemo(it.id));
+      list.append(b);
+    }
+    const q = new URLSearchParams(location.search).get("text");
+    if (q && items.some((i) => i.id === q)) loadDemo(q);
+  } catch (e) {
+    setStatus("Could not load the examples.", true);
+  }
+}
+buildPicker();
 
 $("newText").addEventListener("click", () => {
   $("readScreen").hidden = true;
@@ -106,9 +80,15 @@ $("newText").addEventListener("click", () => {
 $("viewStructured").addEventListener("click", () => setView("structured"));
 $("viewOriginal").addEventListener("click", () => setView("original"));
 $("viewBrief").addEventListener("click", () => setView("brief"));
+$("showAll").addEventListener("click", () => {
+  showAll = !showAll;
+  $("showAll").classList.toggle("on", showAll);
+  $("showAll").setAttribute("aria-pressed", String(showAll));
+  renderBody();
+});
 
 // Brief view keeps only the sentences that carry the structure of the text.
-const BRIEF_GROUPS = new Set(["contrast", "concession", "result", "summary", "emphasis", "sequence", "alternative"]);
+const BRIEF_KINDS = new Set(["contrast", "concession", "result", "summary", "stance", "sequence", "alternative"]);
 
 function setView(v) {
   view = v;
@@ -125,6 +105,8 @@ function show() {
   $("viewStructured").classList.add("on");
   $("viewOriginal").classList.remove("on");
   $("viewBrief").classList.remove("on");
+  linkLetters = new Map();
+  for (const a of data.annotations) if (a.link && !linkLetters.has(a.link)) linkLetters.set(a.link, String.fromCharCode(97 + (linkLetters.size % 26)));
   renderCover();
   renderBody();
   renderLegend();
@@ -162,7 +144,7 @@ function renderCover() {
   const counts = partWordCounts();
   const stripe = el("div", "stripe");
   data.overview.parts.forEach((part, i) => {
-    const seg = el("span", "t-" + part.type);
+    const seg = el("span", "pt-" + part.type);
     seg.style.flex = `${Math.max(counts[i], 1)} 1 0`;
     seg.title = `${PART_NAMES[part.type]}: ${part.label}`;
     stripe.append(seg);
@@ -174,7 +156,7 @@ function renderCover() {
     const li = el("li");
     const b = el("button", "part-link");
     b.type = "button";
-    b.append(el("span", "sw t-" + part.type), el("span", "no", String(i + 1)), el("span", "ty", PART_NAMES[part.type]), el("span", "lb", part.label), el("span", "wc", `${counts[i]} words`));
+    b.append(el("span", "sw pt-" + part.type), el("span", "no", String(i + 1)), el("span", "ty", PART_NAMES[part.type]), el("span", "lb", part.label), el("span", "wc", `${counts[i]} words`));
     b.addEventListener("click", () => {
       if (view === "original") setView("structured");
       document.getElementById("part-" + (i + 1))?.scrollIntoView();
@@ -188,21 +170,26 @@ function renderCover() {
 
 // ---------- Body ----------
 
-function chip(text, group) {
-  const g = GROUPS[group];
-  const c = el("span", "cw g-" + group);
-  c.title = `${g.name}: ${g.says}`;
-  c.append(el("span", "sym", g.sym), document.createTextNode(text));
+function chip(text, a) {
+  const t = TYPES[a.type];
+  const c = el("span", "cw t-" + a.type + (a.link ? " linked" : ""));
+  c.title = `${t.name}: ${t.says}`;
+  const sym = el("span", "sym", t.sym);
+  sym.setAttribute("aria-hidden", "true");
+  if (a.link) { c.dataset.link = a.link; sym.append(el("sup", "idx", linkLetters.get(a.link) || "")); }
+  c.append(sym, document.createTextNode(text));
   return c;
 }
 
-// Append sentence text [from, to) to node, turning marked connectors into chips.
+const isShown = (a) => a.visible !== false || showAll;
+
+// Append sentence text [from, to) to node, turning visible marks into chips.
 function appendText(node, sentence, from, to, marks) {
   let cursor = from;
   for (const m of marks.filter((m) => m.sentence === sentence.id && m.pos >= from && m.end <= to).sort((a, b) => a.pos - b.pos)) {
     if (m.pos < cursor) continue;
     if (m.pos > cursor) node.append(sentence.text.slice(cursor, m.pos));
-    node.append(chip(sentence.text.slice(m.pos, m.end), m.group));
+    node.append(chip(sentence.text.slice(m.pos, m.end), m));
     cursor = m.end;
   }
   if (cursor < to) node.append(sentence.text.slice(cursor, to));
@@ -212,74 +199,49 @@ function appendSentences(node, sentences, marks) {
   for (const s of sentences) appendText(node, s, 0, s.text.length, marks);
 }
 
-let stepNo = 0;
-
 function renderParagraph(p, container) {
   const byId = new Map(p.sentences.map((s) => [s.id, s]));
   const first = p.sentences[0].id;
   const last = p.sentences.at(-1).id;
-  const anns = data.annotations
-    .filter((a) => byId.has(a.sentence))
-    .sort((a, b) => a.sentence - b.sentence || a.pos - b.pos);
+  const anns = data.annotations.filter((a) => byId.has(a.sentence)).sort((a, b) => a.sentence - b.sentence || a.pos - b.pos);
 
-  const claimed = new Map(); // sentence id -> block
+  const claimed = new Map(); // sentence id -> annotation that owns the block
   const marks = [];
-  const blocks = [];
-
   for (const a of anns) {
-    if (a.layout === "mark") { marks.push(a); continue; }
-    let from = a.layout === "pair" ? a.before_start : a.sentence;
-    const to = a.after_end;
-    if (a.layout === "pair" && from === a.sentence) {
-      // No real "before" side inside the sentence: use the previous sentence, or just mark.
-      const before = byId.get(a.sentence).text.slice(0, a.pos);
-      if (words(before) < 3) {
-        if (a.sentence - 1 >= first) from = a.sentence - 1;
-        else { marks.push(a); continue; }
-      }
-    }
-    if (a.layout === "pair" && words(tail(a, byId, to)) < 3) { marks.push(a); continue; }
-    let free = true;
-    for (let id = from; id <= to; id++) if (claimed.has(id)) free = false;
-    if (!free) { marks.push(a); continue; }
-    const block = { a, from, to };
-    for (let id = from; id <= to; id++) claimed.set(id, block);
-    blocks.push(block);
-    if (a.layout !== "pair") marks.push(a); // connector stays inline inside the block
+    if (a.layout === "mark") { if (isShown(a)) marks.push(a); continue; }
+    for (let id = a.before_start; id <= a.after_end; id++) claimed.set(id, a);
+    if (a.layout !== "pair") marks.push(a); // the connector stays inline inside its block
   }
 
   let run = null;
   let steps = null;
   for (let id = first; id <= last; id++) {
-    const block = claimed.get(id);
-    if (!block) {
+    const a = claimed.get(id);
+    if (!a) {
       steps = null;
-      if (view === "brief" && !marks.some((m) => m.sentence === id && BRIEF_GROUPS.has(m.group))) { run = null; continue; }
+      if (view === "brief" && !anns.some((m) => m.sentence === id && BRIEF_KINDS.has(m.kind))) { run = null; continue; }
       if (!run) { run = el("p", "run"); container.append(run); }
       appendSentences(run, [byId.get(id)], marks);
       continue;
     }
     run = null;
-    if (block.from !== id) continue;
+    if (a.before_start !== id) continue;
     const sentences = [];
-    for (let i = block.from; i <= block.to; i++) sentences.push(byId.get(i));
-    const a = block.a;
+    for (let i = a.before_start; i <= a.after_end; i++) sentences.push(byId.get(i));
 
     if (a.layout === "sequence") {
       if (!steps) { steps = el("ol", "steps"); container.append(steps); }
-      const word = byId.get(a.sentence).text.slice(a.pos, a.end);
-      if (/^(first|firstly|first of all|to begin with)$/i.test(word) || stepNo === 0) stepNo = 1;
-      else stepNo++;
       const li = el("li", "step");
       const tx = el("div", "tx");
+      if (a.list_size) tx.append(el("div", "step-label", `Step ${a.number} of ${a.list_size}`));
       appendSentences(tx, sentences, marks);
-      li.append(el("div", "n", String(stepNo)), tx);
+      li.append(el("div", "n", String(a.number)), tx);
       steps.append(li);
       continue;
     }
     steps = null;
 
-    if (a.layout === "pair") container.append(renderPair(block, byId, marks));
+    if (a.layout === "pair") container.append(renderPair(a, byId, marks));
     else if (a.layout === "example") {
       if (view === "brief") continue;
       const d = el("details", "example");
@@ -290,8 +252,9 @@ function renderParagraph(p, container) {
       d.append(tx);
       container.append(d);
     } else {
-      const b = el("div", "blk summary-blk");
-      b.append(el("div", "blk-label", a.group === "summary" ? "Σ  Summary" : "∴  Conclusion"));
+      const conclusion = a.label === "Conclusion";
+      const b = el("div", "blk summary-blk " + (conclusion ? "t-reasoning-blk" : "t-summary-blk"));
+      b.append(el("div", "blk-label", conclusion ? "∴  Conclusion" : "Σ  Summary"));
       const tx = el("div", "tx");
       appendSentences(tx, sentences, marks);
       b.append(tx);
@@ -300,39 +263,36 @@ function renderParagraph(p, container) {
   }
 }
 
-function tail(a, byId, to) {
-  let t = byId.get(a.sentence).text.slice(a.end);
-  for (let i = a.sentence + 1; i <= to; i++) t += byId.get(i).text;
-  return t;
-}
-
-function renderPair(block, byId, marks) {
-  const { a, from, to } = block;
+function renderPair(a, byId, marks) {
   const s = byId.get(a.sentence);
-  const wrap = el("div", "blk pair" + (a.group === "alternative" ? "" : " weighted"));
+  const labels = a.kind === "alternative" ? ["Option A", "Option B"] : a.kind === "concession" ? ["Admitted", "Claimed"] : ["Side A", "Side B"];
+  const wrap = el("div", "blk pair" + (a.kind === "alternative" ? "" : " weighted"));
 
   const sideA = el("div", "side a");
-  sideA.append(el("div", "blk-label", a.group === "alternative" ? "Option A" : a.group === "concession" ? "Admitted" : "Side A"));
+  sideA.append(el("div", "blk-label", labels[0]));
   const ta = el("div", "tx");
-  for (let i = from; i < a.sentence; i++) appendSentences(ta, [byId.get(i)], marks);
-  appendText(ta, s, 0, a.pos, marks);
+  const sideB = el("div", "side b");
+  sideB.append(el("div", "blk-label", labels[1]));
+  const tb = el("div", "tx");
+
+  const skipSep = (from) => { let i = from; while (i < s.text.length && /[,\s]/.test(s.text[i])) i++; return i; };
+  if (a.pair_class === "C") {
+    // Side A runs from the connector to the first top-level comma; side B follows it. Every character is kept except the comma.
+    appendText(ta, s, a.end, a.split, marks);
+    appendText(tb, s, skipSep(a.split), s.text.length, marks);
+  } else {
+    for (let i = a.before_start; i < a.sentence; i++) appendSentences(ta, [byId.get(i)], marks);
+    appendText(ta, s, 0, a.pos, marks);
+    appendText(tb, s, skipSep(a.end), s.text.length, marks);
+  }
   sideA.append(ta);
+  sideB.append(tb);
 
   const mid = el("div", "mid");
-  const pill = el("div", "pill");
-  pill.title = `${GROUPS[a.group].name}: ${GROUPS[a.group].says}`;
-  pill.append(el("span", "sym", GROUPS[a.group].sym), document.createTextNode(s.text.slice(a.pos, a.end)));
+  const pill = el("div", "pill t-turn");
+  pill.title = `${TYPES.turn.name}: ${TYPES.turn.says}`;
+  pill.append(el("span", "sym", TYPES.turn.sym), document.createTextNode(s.text.slice(a.pos, a.end)));
   mid.append(pill);
-
-  const sideB = el("div", "side b");
-  sideB.append(el("div", "blk-label", a.group === "alternative" ? "Option B" : a.group === "concession" ? "Claimed" : "Side B"));
-  const tb = el("div", "tx");
-  // Skip the comma and space that follow the connector; every other character is kept.
-  let start = a.end;
-  while (start < s.text.length && /[,\s]/.test(s.text[start])) start++;
-  appendText(tb, s, start, s.text.length, marks);
-  for (let i = a.sentence + 1; i <= to; i++) appendSentences(tb, [byId.get(i)], marks);
-  sideB.append(tb);
 
   wrap.append(sideA, mid, sideB);
   return wrap;
@@ -347,7 +307,7 @@ function renderBody() {
     body.append(plain);
     return;
   }
-  stepNo = 0;
+  if (data.structure_ok === false) body.append(el("p", "brief-note", "Structure could not be shown for this text. Showing the original."));
   if (view === "brief") body.append(el("p", "brief-note", "Brief: only the sentences that carry the structure, such as the main turns, the steps and the conclusions. Original words, nothing rewritten. Examples and details are in the Structured view."));
   const parts = data.overview.parts;
   let next = 0;
@@ -364,37 +324,34 @@ function renderBody() {
   }
 }
 
-// /?demo loads the sample text and runs it. /?url=<link> loads that article and runs it.
-const params = new URLSearchParams(location.search);
-if (params.has("demo")) {
-  $("text").value = window.SAMPLE_TEXT;
-  updateCount();
-  $("go").click();
-} else if (params.get("url")) {
-  $("url").value = params.get("url");
-  setStatus("Getting the article...");
-  post("/api/fetch", { url: params.get("url") })
-    .then(({ text }) => {
-      $("text").value = text;
-      updateCount();
-      $("go").click();
-    })
-    .catch((e) => setStatus(e.message, true));
+// Hover or focus on one half of a linked pair highlights the other half.
+document.addEventListener("mouseover", (e) => toggleLink(e.target, true));
+document.addEventListener("mouseout", (e) => toggleLink(e.target, false));
+function toggleLink(target, on) {
+  const c = target.closest?.(".cw[data-link]");
+  if (!c) return;
+  document.querySelectorAll(`.cw[data-link="${c.dataset.link}"]`).forEach((n) => n.classList.toggle("hl", on));
 }
 
 function renderLegend() {
   const box = $("legend");
   box.replaceChildren();
-  box.append(el("h3", null, "Symbols in this text"));
-  const used = [...new Set(data.annotations.map((a) => a.group))];
+  box.append(el("h3", null, "Types in this text"));
+  const used = new Set(data.annotations.map((a) => a.type));
   const dl = el("dl");
-  for (const key of Object.keys(GROUPS).filter((k) => used.includes(k))) {
+  for (const key of TYPE_ORDER.filter((k) => used.has(k))) {
     const row = el("div", "row");
     const dd = el("dd");
-    dd.append(el("b", null, GROUPS[key].name), document.createTextNode(GROUPS[key].says));
-    row.append(el("dt", null, GROUPS[key].sym), dd);
+    const name = el("b", "t-" + key, TYPES[key].name);
+    name.classList.add("ul-" + UNDERLINE[key]);
+    dd.append(name, document.createTextNode(TYPES[key].says));
+    const dt = el("dt", "t-" + key, TYPES[key].sym);
+    row.append(dt, dd);
     dl.append(row);
   }
   box.append(dl);
-  if (data.dropped) box.append(el("p", "dropped", `${data.dropped} marking(s) did not match the original text and were left out.`));
+  const hidden = data.annotations.filter((a) => a.visible === false).length;
+  if (hidden) box.append(el("p", "dropped", `${hidden} less important mark(s) are hidden. Press "Show all" to see them.`));
+  const flagged = (data.checks || []).filter((c) => c.action === "fail").length;
+  if (flagged) box.append(el("p", "dropped", "A self-check stopped the markup for this text."));
 }

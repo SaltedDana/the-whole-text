@@ -20,7 +20,8 @@
       <button type="button" id="viewStructured" class="on">Structured</button>
       <button type="button" id="viewBrief">Brief</button>
     </div>
-    <button type="button" class="btn ghost" id="newText">New text</button>
+    <button type="button" class="btn ghost" id="showAll" aria-pressed="false">Show all</button>
+    <button type="button" class="btn ghost" id="newText">Other examples</button>
   </div>
 </header>
 
@@ -28,20 +29,9 @@
   <h1 class="display">Reading access for everyone.</h1>
   <p class="lede">Dyslexia, an attention disorder or plain distraction is no longer a barrier to a long text. You read every word the writer wrote, in a shape you can stay with.</p>
 
-  <label class="field-label" for="url">Link to an article</label>
-  <div class="url-row">
-    <input id="url" type="url" placeholder="https://..." autocomplete="off">
-    <button type="button" class="btn ghost" id="fetchBtn">Get text</button>
-  </div>
-
-  <label class="field-label" for="text">Or paste the text</label>
-  <textarea id="text" rows="12" placeholder="Paste an English text here."></textarea>
-
-  <div class="actions">
-    <button type="button" class="btn primary big" id="go">Show me the structure</button>
-    <button type="button" class="btn ghost small" id="sample">Try a sample text</button>
-    <span class="count" id="count"></span>
-  </div>
+  <h2 class="field-label">Pick an example text</h2>
+  <p class="demo-note">These results were made earlier with the live app (Claude Haiku 5.5) and saved. Every word of each text is shown as the writer wrote it. This page makes no model calls.</p>
+  <div class="examples" id="examples"></div>
   <p class="status" id="status" role="status" aria-live="polite"></p>
   <section class="pitch" aria-label="How it works, shown in the app's own layout">
     <div class="blk pair weighted">
@@ -50,11 +40,11 @@
       <div class="side b"><div class="blk-label">Side B</div><div class="tx">you still have to know the whole contract, the whole paper, the whole report.</div></div>
     </div>
     <ol class="steps">
-      <li class="step"><div class="n">1</div><div class="tx"><span class="cw g-sequence"><span class="sym">1 2 3</span>First</span>, you paste your text or a link to an article.</div></li>
-      <li class="step"><div class="n">2</div><div class="tx"><span class="cw g-sequence"><span class="sym">1 2 3</span>Second</span>, you get a map: how long the text is and what is inside it.</div></li>
-      <li class="step"><div class="n">3</div><div class="tx"><span class="cw g-sequence"><span class="sym">1 2 3</span>Finally</span>, you read. Options sit side by side, steps get numbers, conclusions get big.</div></li>
+      <li class="step"><div class="n">1</div><div class="tx"><span class="cw t-sequence"><span class="sym">№</span>First</span>, you paste your text or a link to an article.</div></li>
+      <li class="step"><div class="n">2</div><div class="tx"><span class="cw t-sequence"><span class="sym">№</span>Second</span>, you get a map: how long the text is and what is inside it.</div></li>
+      <li class="step"><div class="n">3</div><div class="tx"><span class="cw t-sequence"><span class="sym">№</span>Finally</span>, you read. Options sit side by side, steps get numbers, conclusions get big.</div></li>
     </ol>
-    <div class="blk summary-blk"><div class="blk-label">Σ  Summary</div><div class="tx"><span class="cw g-summary"><span class="sym">Σ</span>In short</span>, nothing is cut and nothing is rewritten. You get the whole text, and you get through it.</div></div>
+    <div class="blk summary-blk t-summary-blk"><div class="blk-label">Σ  Summary</div><div class="tx"><span class="cw t-summary"><span class="sym">Σ</span>In short</span>, nothing is cut and nothing is rewritten. You get the whole text, and you get through it.</div></div>
     <p class="pitch-note">This section uses the same layout the app gives your text.</p>
   </section>
 
@@ -68,7 +58,6 @@
   <aside class="legend" id="legend"></aside>
 </div>
 
-<script src="sample.js"></script>
-<script src="app.js"></script>
+<script <script src="app.js"></script>
 </body>
 </html>
