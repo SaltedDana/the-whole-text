@@ -48,6 +48,47 @@
     <p class="pitch-note">This section uses the same layout the app gives your text.</p>
   </section>
 
+  <section class="why" aria-labelledby="whyTitle">
+    <h2 id="whyTitle" class="why-title">Why it works</h2>
+    <div class="why-grid">
+      <article class="why-card" style="--wc:var(--c-sequence)">
+        <h3>The architecture of the text</h3>
+        <p>Spoken aloud, a text has a shape. The voice rises on the main point, pauses before a contrast, slows down on a list. Print flattens all of it.</p>
+        <p>The reader gives that shape back. Opposing sides sit face to face, options sit side by side, steps carry numbers, conclusions stand large. Like a relief map, the peaks rise above the plain, and you see where you are in the terrain.</p>
+      </article>
+      <article class="why-card" style="--wc:var(--c-reasoning)">
+        <h3>Built on how people learn</h3>
+        <p>A map comes before the text, so you know what is coming (an advance organizer). The structure words carry visible signals (signaling). The text is grouped into parts (chunking). Each signal is shown by symbol, color and position together (dual coding).</p>
+        <p>These ideas come from learning research. The reader applies them to the structure of your text and to nothing else.</p>
+      </article>
+      <article class="why-card" style="--wc:var(--c-guide)">
+        <h3>The whole text, untouched</h3>
+        <p>No summary. No rewriting. No AI judgment about what the text means. Every word is the writer's word.</p>
+        <p>The model only points to where a connecting word sits and what job it does. Code checks every pointer against the original and drops any that does not match. The instructions the model receives are in the open source code. The one thing a model writes is the short map before the text, and it is labeled.</p>
+      </article>
+      <article class="why-card" style="--wc:var(--c-example)">
+        <h3>For every kind of reader</h3>
+        <p>Made for readers with ADHD, ADD or dyslexia, and for anyone who loses the thread of a long text.</p>
+        <p>It also helps when you read on a phone, in a second language, or at the end of a long day.</p>
+      </article>
+      <article class="why-card wide" style="--wc:var(--c-turn)">
+        <h3>Where you need the full, true text</h3>
+        <p>Some texts cannot be summarized, because a skipped condition has a cost.</p>
+        <ul class="chips">
+          <li><b>Science</b> papers, methods, supplements</li>
+          <li><b>Medicine</b> guidelines, consent forms, patient information</li>
+          <li><b>Law</b> contracts, rulings, terms of service</li>
+          <li><b>Insurance</b> policies, where the exclusions sit</li>
+          <li><b>Finance</b> regulations, audit reports, filings</li>
+          <li><b>Government</b> permits, public notices, tax rules</li>
+          <li><b>Safety</b> manuals, procedures, standards</li>
+          <li><b>Education</b> textbooks, exam rules, grant guidelines</li>
+          <li><b>Home and work</b> leases, employment agreements</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
 </main>
 
 <div id="readScreen" class="read-screen" hidden>
@@ -58,6 +99,6 @@
   <aside class="legend" id="legend"></aside>
 </div>
 
-<script <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
