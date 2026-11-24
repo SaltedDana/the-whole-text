@@ -67,7 +67,7 @@ textarea{resize:vertical;line-height:1.5}
 .part-link .ty{font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .part-link .lb{font-family:var(--font-sans);font-size:16px}
 .part-link .wc{color:var(--ink-soft)}
-.pt-story{background:#CDACFE} .pt-example{background:#7BA3AD} .pt-summary{background:#FC7142}
+.pt-story{background:#CDACFE} .pt-example{background:#F2C14E} .pt-summary{background:#FC7142}
 .pt-main_point{background:#6C8F8A} .pt-evidence{background:#3392FF} .pt-explanation{background:#D1DDD4} .pt-background{background:#F5F9FC} .pt-counterpoint{background:#FFFFFF}
 
 /* Part header inside the text */
@@ -81,9 +81,9 @@ textarea{resize:vertical;line-height:1.5}
 
 /* Inline connecting word: the word stays in body ink; color sits on the underline and the badge. */
 :root{
-  /* Palette colors first: blue, slate, dark green, lavender, orange. Added to fit the palette: deep sage, coral, deep lavender. */
-  --c-turn:#3392FF;--g-turn:#1F2328; --c-reasoning:#7BA3AD;--g-reasoning:#1F2328; --c-addition:#6C8F8A;--g-addition:#1F2328; --c-sequence:#CDACFE;--g-sequence:#1F2328;
-  --c-example:#FC7142;--g-example:#1F2328; --c-guide:#A7BDAF;--g-guide:#1F2328; --c-summary:#C94F27;--g-summary:#FFFFFF; --c-voice:#9B7BD6;--g-voice:#1F2328;
+  /* Base palette: light green, dark green, blue, orange, purple. Added, different from those but matching: yellow, rose, navy. */
+  --c-turn:#FC7142;--g-turn:#1F2328; --c-reasoning:#3392FF;--g-reasoning:#1F2328; --c-addition:#D1DDD4;--g-addition:#1F2328; --c-sequence:#CDACFE;--g-sequence:#1F2328;
+  --c-example:#F2C14E;--g-example:#1F2328; --c-guide:#6C8F8A;--g-guide:#1F2328; --c-summary:#2B3A8C;--g-summary:#FFFFFF; --c-voice:#EE8FB0;--g-voice:#1F2328;
 }
 @media (prefers-color-scheme: dark){
   :root{
