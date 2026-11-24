@@ -67,8 +67,8 @@ textarea{resize:vertical;line-height:1.5}
 .part-link .ty{font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .part-link .lb{font-family:var(--font-sans);font-size:16px}
 .part-link .wc{color:var(--ink-soft)}
-.pt-story{background:var(--lavender)} .pt-example{background:var(--slate)} .pt-summary{background:var(--orange)}
-.pt-main_point{background:var(--ink)} .pt-explanation,.pt-evidence,.pt-background{background:var(--sage)} .pt-counterpoint{background:var(--white)}
+.pt-story{background:#CDACFE} .pt-example{background:#7BA3AD} .pt-summary{background:#FC7142}
+.pt-main_point{background:#6C8F8A} .pt-evidence{background:#3392FF} .pt-explanation{background:#D1DDD4} .pt-background{background:#F5F9FC} .pt-counterpoint{background:#FFFFFF}
 
 /* Part header inside the text */
 .part-head{display:flex;gap:var(--s3);align-items:baseline;border-top:var(--bw) solid var(--ink);padding-top:var(--s2);margin:var(--s7) 0 var(--s4);font-family:var(--font-mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;scroll-margin-top:80px}
