@@ -1,8 +1,9 @@
-/* Tokens from the Personal AGI Standard design system. */
+/* Tokens from Dana's design system (Negev proposal system): ink, blue, orange, teal, sage, purple. White page, no dark theme, no gradients. */
 @font-face{font-family:'Virgil';src:url('fonts/Virgil.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 :root{
-  --ink:#1F2328; --ink-soft:#4A4A4D; --cream:#FBF8F1; --paper:#F5F9FC;
-  --lavender:#CDACFE; --sage:#D1DDD4; --sage-text:#6C8F8A; --slate:#7BA3AD; --orange:#FC7142; --white:#FFFFFF;
+  --ink:#1b1b1b; --ink-soft:#6f6f6f; --soft:#9a9a9a; --cream:#FFFFFF; --paper:#FFFFFF;
+  --blue:#3b8ef7; --orange:#ff7043; --teal:#7fa3ae; --sage:#cfdad3; --sage-text:#6f9484; --purple:#c9a8f5; --white:#FFFFFF;
+  --lavender:var(--purple); --slate:var(--teal);
   --font-display:'Space Grotesk',system-ui,sans-serif;
   --font-sans:'Space Grotesk',system-ui,-apple-system,sans-serif;
   --font-mono:'IBM Plex Mono','SF Mono',ui-monospace,monospace;
@@ -67,8 +68,8 @@ textarea{resize:vertical;line-height:1.5}
 .part-link .ty{font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .part-link .lb{font-family:var(--font-sans);font-size:16px}
 .part-link .wc{color:var(--ink-soft)}
-.pt-story{background:var(--lavender)} .pt-example{background:var(--slate)} .pt-summary{background:var(--orange)}
-.pt-main_point{background:var(--ink)} .pt-explanation,.pt-evidence,.pt-background{background:var(--sage)} .pt-counterpoint{background:var(--white)}
+.pt-story{background:var(--purple)} .pt-example{background:var(--teal)} .pt-summary{background:var(--orange)} .pt-evidence{background:var(--blue)}
+.pt-main_point{background:var(--ink)} .pt-explanation,.pt-background{background:var(--sage)} .pt-counterpoint{background:var(--white)}
 
 /* Part header inside the text */
 .part-head{display:flex;gap:var(--s3);align-items:baseline;border-top:var(--bw) solid var(--ink);padding-top:var(--s2);margin:var(--s7) 0 var(--s4);font-family:var(--font-mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;scroll-margin-top:80px}
@@ -81,18 +82,12 @@ textarea{resize:vertical;line-height:1.5}
 
 /* Inline connecting word: the word stays in body ink; color sits on the underline and the badge. */
 :root{
-  --c-turn:#373691;--g-turn:#fff; --c-reasoning:#007DA9;--g-reasoning:#fff; --c-addition:#948A7E;--g-addition:#1F2328; --c-sequence:#317031;--g-sequence:#fff;
-  --c-example:#B44286;--g-example:#fff; --c-guide:#B75F14;--g-guide:#fff; --c-summary:#971D1A;--g-summary:#fff; --c-voice:#5C412F;--g-voice:#fff;
+  --c-turn:var(--blue);--g-turn:var(--ink); --c-reasoning:var(--teal);--g-reasoning:var(--ink); --c-addition:var(--sage-text);--g-addition:var(--ink); --c-sequence:var(--ink);--g-sequence:#fff;
+  --c-example:var(--purple);--g-example:var(--ink); --c-guide:var(--soft);--g-guide:var(--ink); --c-summary:var(--orange);--g-summary:var(--ink); --c-voice:var(--ink-soft);--g-voice:#fff;
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --ink:#E8ECEF;--ink-soft:#A9B0B6;--cream:#1E2228;--paper:#15181C;--white:#1E2228;
-    --c-turn:#A99BEC;--g-turn:#15181C; --c-reasoning:#6AC1E2;--g-reasoning:#15181C; --c-addition:#E7E2DB;--g-addition:#15181C; --c-sequence:#8ACB84;--g-sequence:#15181C;
-    --c-example:#F499D3;--g-example:#15181C; --c-guide:#FBA95F;--g-guide:#15181C; --c-summary:#E47665;--g-summary:#15181C; --c-voice:#B19684;--g-voice:#15181C;
-  }
-  .btn.primary{background:var(--ink);color:var(--paper)}
-  .status.error{color:#FF9B7A}
-}
+.strip{display:flex;height:8px}
+.strip i{flex:1;display:block}
+.strip i:nth-child(1){background:var(--blue)} .strip i:nth-child(2){background:var(--orange)} .strip i:nth-child(3){background:var(--teal)} .strip i:nth-child(4){background:var(--sage)} .strip i:nth-child(5){background:var(--purple)}
 .cw{font-weight:600;white-space:nowrap;text-decoration-line:underline;text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:var(--ct,var(--ink))}
 .cw .sym,.legend dt,.pair .mid .pill{background:var(--ct);color:var(--gt)}
 .cw .sym{font-family:var(--font-mono);font-size:.82em;font-weight:600;margin-right:4px;padding:1px 4px;vertical-align:.12em;text-decoration:none;display:inline-block}
