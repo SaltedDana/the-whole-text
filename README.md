@@ -39,4 +39,4 @@ Then open http://localhost:4319. The key is read from the environment and never 
 
 ## The public preview
 
-The link at the top is a static copy in `docs/`. It has no server and no API key, so it shows a saved result for the sample text only. The live app, with any text, runs locally.
+The **See it** link at the top is a static copy in `docs/`. It has no server and no API key, so it shows a saved result for the sample text only. To use your own text, go to Tangible: https://tangible.saltedmind.co (free, with a daily limit). The code in this repository runs on your own computer.
