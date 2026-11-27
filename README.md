@@ -6,6 +6,12 @@ Built at Fable 5.2 Build Day, Tel Aviv, 23 November 2026. Topic: accessibility. 
 
 **Live now:** this project continues as Tangible, by Salted Mind: https://tangible.saltedmind.co
 
+## Method and rights
+
+This work is based on the way Dana Maman thinks about and analyzes texts, together with remedial teaching methodologies.
+
+© 2026 Dana Maman. All rights reserved.
+
 Some texts cannot be skipped or summarized: a contract, an academic paper, a report you are expected to know. For readers with attention difficulties, a long wall of text is hard to stay with.
 
 The Whole Text gives access to the full text. Nothing is summarized and nothing is rewritten. The reader gets every original word, in a shape that is easier to stay with.
